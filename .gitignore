@@ -3,8 +3,11 @@ node_modules/
 dist/
 build/
 .npmrc
-.env.local
-.env
+
+# 환경 변수
+backend/.env
+frontend/.env.local
+.env*
 backend/uploads
 
 # Next.js
@@ -12,6 +15,7 @@ backend/uploads
 out/
 
 test-results/
+/e2e/test-results/
 
 # Logs
 logs/
@@ -26,3 +30,6 @@ Thumbs.db
 
 # VSCode settings
 .vscode/
+.idea/
+*.swp
+*.swo

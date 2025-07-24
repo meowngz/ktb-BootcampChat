@@ -322,21 +322,16 @@ export const useChatRoom = () => {
     // 메시지 이벤트
     socketRef.current.on('message', message => {
       if (!message || !mountedRef.current || messageProcessingRef.current || !message._id) return;
-      
-      if (processedMessageIds.current.has(message._id)) {
-        return;
-      }
-
-      console.log('Received message:', message);
-      processedMessageIds.current.add(message._id);
-
+      // 중복 메시지 방지: _id 기준 + 내용 기준
       setMessages(prev => {
-        if (prev.some(msg => msg._id === message._id)) {
+        const alreadyExists = prev.some(msg => msg._id === message._id);
+        const lastMsg = prev[prev.length - 1];
+        // 마지막 메시지와 내용이 완전히 동일하면 추가하지 않음
+        if (alreadyExists || (lastMsg && lastMsg.content === message.content && lastMsg.sender === message.sender)) {
           return prev;
         }
         return [...prev, message];
       });
-
       if (isNearBottom) {
         scrollToBottom();
       }

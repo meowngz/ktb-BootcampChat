@@ -10,7 +10,7 @@ const routes = require('./routes');
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // trust proxy 설정 추가
 app.set('trust proxy', 1);
@@ -20,14 +20,12 @@ const corsOptions = {
   origin: [
     'https://bootcampchat-fe.run.goorm.site',
     'https://bootcampchat-hgxbv.dev-k8s.arkain.io',
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://localhost:3002',
-    'https://localhost:3000',
-    'https://localhost:3001',
-    'https://localhost:3002',
-    'http://0.0.0.0:3000',
-    'https://0.0.0.0:3000'
+    ...Array.from({length: 11}, (_, i) => `http://localhost:300${i}`),
+    ...Array.from({length: 11}, (_, i) => `https://localhost:300${i}`),
+    ...Array.from({length: 11}, (_, i) => `http://0.0.0.0:300${i}`),
+    ...Array.from({length: 11}, (_, i) => `https://0.0.0.0:300${i}`),
+    'http://localhost:5001',
+    'http://0.0.0.0:5001'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
