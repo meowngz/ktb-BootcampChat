@@ -5,11 +5,9 @@
 
 set -e
 
-# 1. Node.js, MongoDB, Redis 설치 안내
-# (macOS 기준, 직접 설치 필요)
-echo "[안내] Node.js(v18+), MongoDB, Redis가 설치되어 있어야 합니다."
-echo "[안내] Homebrew가 설치되어 있다면 아래 명령어로 설치 가능:"
-echo "brew install node mongodb-community redis"
+## 1. Node.js, MongoDB, Redis 설치 안내 (AWS EC2 Ubuntu 기준)
+echo "[AWS 안내] Node.js(v18+), MongoDB, Redis가 설치되어 있어야 합니다."
+echo "sudo apt update && sudo apt install -y nodejs npm mongodb redis-server"
 
 # 2. 프로젝트 클론
 # (이미 클론된 경우 생략)
@@ -31,16 +29,17 @@ PASSWORD_SALT=your_password_salt
 EOF
 
 cat <<EOF > frontend/.env.local
-NEXT_PUBLIC_API_URL=http://localhost:5001
+NEXT_PUBLIC_API_URL=http://goorm-ktb-009.goorm.team
 NEXT_PUBLIC_ENCRYPTION_KEY=your_encryption_key
 NEXT_PUBLIC_PASSWORD_SALT=your_password_salt
 EOF
 
-# 5. MongoDB, Redis 실행 안내
-echo "[안내] MongoDB와 Redis를 실행하세요:"
-echo "mongod --dbpath ~/data/db &"
-echo "redis-server &"
+## 5. MongoDB, Redis 실행 안내 (AWS EC2 Ubuntu)
+echo "[AWS 안내] MongoDB와 Redis를 실행하세요:"
+echo "sudo systemctl start mongodb"
+echo "sudo systemctl start redis-server"
 
-# 6. 서버 실행
-echo "[안내] 프론트엔드/백엔드 서버를 개발 모드로 실행합니다."
-npm run dev
+## 6. 서버 실행 (운영/배포 모드)
+echo "[AWS 안내] 프론트엔드/백엔드 서버를 실행합니다."
+echo "백엔드: cd backend && npm install && npm start &"
+echo "프론트엔드: cd frontend && npm install && npm run build && npm start &"
