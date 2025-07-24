@@ -46,6 +46,14 @@ Playwright 기반 E2E 테스트 코드 및 테스트 데이터
 ## 기타
 - `docs/`: 문서 및 가이드
 
+## 로컬 DB 및 설정 파일 위치
+- **MongoDB 데이터 경로**: `/var/lib/mongodb` (Ubuntu/macOS)
+- **MongoDB 설정 파일**: `/etc/mongod.conf`
+- **Redis 데이터 경로**: `/var/lib/redis` (Ubuntu/macOS)
+- **Redis 설정 파일**: `/etc/redis/redis.conf`
+
+> DB 데이터는 위 경로에 저장되며, 설정 파일을 통해 포트/인증/경로 등 변경 가능. EC2 등 서버 환경에서도 동일 경로 사용.
+
 ---
 
 ### 참고

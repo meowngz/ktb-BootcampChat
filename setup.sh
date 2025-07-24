@@ -5,20 +5,27 @@
 
 set -e
 
-## 1. Node.js, MongoDB, Redis 설치 안내 (AWS EC2 Ubuntu 기준)
-echo "[AWS 안내] Node.js(v18+), MongoDB, Redis가 설치되어 있어야 합니다."
-echo "sudo apt update && sudo apt install -y nodejs npm mongodb redis-server"
+## 1. Node.js, MongoDB, Redis 설치 및 서비스 활성화 (AWS EC2 Ubuntu 기준)
+echo "[AWS 자동화] Node.js(v18+), MongoDB, Redis를 설치합니다."
+sudo apt update && sudo apt install -y nodejs npm mongodb redis-server
+echo "[AWS 자동화] MongoDB, Redis를 부팅시 자동 시작하도록 설정합니다."
+sudo systemctl enable mongodb
+sudo systemctl enable redis-server
 
 # 2. 프로젝트 클론
 # (이미 클론된 경우 생략)
 # git clone <REPO_URL>
 # cd <PROJECT_DIR>
 
-# 3. 패키지 설치
+
+## 2. 프로젝트 패키지 설치 및 초기화
+echo "[AWS 자동화] 프로젝트 루트 패키지 설치 및 초기화"
 npm install
 npm run setup
 
-# 4. 환경 변수 파일 생성 (로컬 기본값)
+
+## 3. 환경 변수 파일 자동 생성
+echo "[AWS 자동화] 환경 변수 파일을 생성합니다."
 cat <<EOF > backend/.env
 MONGO_URI=mongodb://localhost:27017/bootcampchat
 JWT_SECRET=your_jwt_secret
@@ -34,12 +41,20 @@ NEXT_PUBLIC_ENCRYPTION_KEY=your_encryption_key
 NEXT_PUBLIC_PASSWORD_SALT=your_password_salt
 EOF
 
-## 5. MongoDB, Redis 실행 안내 (AWS EC2 Ubuntu)
-echo "[AWS 안내] MongoDB와 Redis를 실행하세요:"
-echo "sudo systemctl start mongodb"
-echo "sudo systemctl start redis-server"
 
-## 6. 서버 실행 (운영/배포 모드)
-echo "[AWS 안내] 프론트엔드/백엔드 서버를 실행합니다."
-echo "백엔드: cd backend && npm install && npm start &"
-echo "프론트엔드: cd frontend && npm install && npm run build && npm start &"
+## 4. MongoDB, Redis 실행 및 보안 설정 예시
+echo "[AWS 자동화] MongoDB, Redis를 실행합니다."
+sudo systemctl start mongodb
+sudo systemctl start redis-server
+
+# Redis 보안(비밀번호) 설정 예시
+echo "requirepass your_redis_password" | sudo tee -a /etc/redis/redis.conf
+sudo systemctl restart redis-server
+
+# MongoDB 인증 설정은 별도 작업 필요 (기본은 인증 없음)
+
+
+## 5. 서버 실행 (운영/배포 모드)
+echo "[AWS 자동화] 프론트엔드/백엔드 서버를 실행합니다."
+cd backend && npm install && npm start &
+cd ../frontend && npm install && npm run build && npm start &
